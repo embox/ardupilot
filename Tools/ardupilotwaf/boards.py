@@ -1364,7 +1364,7 @@ class linux(Board):
 
         if not cfg.env.DEBUG:
             env.CXXFLAGS += [
-                '-O3',
+                '-Os',
             ]
 
         env.LIB += [
