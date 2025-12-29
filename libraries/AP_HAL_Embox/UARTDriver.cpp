@@ -4,6 +4,7 @@
 
 #include "AP_HAL/utility/packetise.h"
 #include "AP_HAL_Embox/UARTDevice.h"
+#include "AP_HAL_Embox/UDPDevice.h"
 #include "ConsoleDevice.h"
 #include "UARTDriver.h"
 #include <AP_Common/ExpandingString.h>
@@ -78,11 +79,11 @@ void UARTDriver::_allocate_buffers(uint16_t rxS, uint16_t txS) {
      * write GPS config packets
      */
 
-    if (rxS < 8192) {
-        rxS = 8192;
+    if (rxS < 4096) {
+        rxS = 4096;
     }
-    if (txS < 32000) {
-        txS = 32000;
+    if (txS < 4096) {
+        txS = 4096;
     }
 
     if (_writebuf.set_size(txS) && _readbuf.set_size(rxS)) {
@@ -101,16 +102,74 @@ void UARTDriver::_deallocate_buffers() {
         - tcp:*:1243:wait
         - udp:192.168.2.15:1243
 */
-AP_HAL::OwnPtr<SerialDevice> UARTDriver::_parseDevicePath(const char* arg) {
+AP_HAL::OwnPtr<SerialDevice> UARTDriver::_parseDevicePath(const char *arg)
+{
     struct stat st;
 
     if (stat(arg, &st) == 0 && S_ISCHR(st.st_mode)) {
         return AP_HAL::OwnPtr<SerialDevice>(NEW_NOTHROW UARTDevice(arg));
-    } else {
+    } else if (strncmp(arg, "udp:", 4) != 0 ) {
         return nullptr;
     }
-}
 
+    char *devstr = strdup(arg);
+
+    if (devstr == nullptr) {
+        return nullptr;
+    }
+
+    char *saveptr = nullptr;
+    char *protocol, *ip, *port, *flag;
+
+    protocol = strtok_r(devstr, ":", &saveptr);
+    ip = strtok_r(nullptr, ":", &saveptr);
+    port = strtok_r(nullptr, ":", &saveptr);
+    flag = strtok_r(nullptr, ":", &saveptr);
+
+    if (ip == nullptr || port == nullptr) {
+        free(devstr);
+        return nullptr;
+    }
+
+    if (_ip) {
+        free(_ip);
+        _ip = nullptr;
+    }
+
+    if (_flag) {
+        free(_flag);
+        _flag = nullptr;
+    }
+
+    _base_port = (uint16_t) atoi(port);
+    _ip = strdup(ip);
+
+    /* Optional flag for TCP */
+    if (flag != nullptr) {
+        _flag = strdup(flag);
+    }
+
+    AP_HAL::OwnPtr<SerialDevice> device = nullptr;
+
+    if (strcmp(protocol, "udp") == 0 || strcmp(protocol, "udpin") == 0) {
+        bool bcast = (_flag && strcmp(_flag, "bcast") == 0);
+#if HAL_GCS_ENABLED
+        _packetise = true;
+#endif
+        if (strcmp(protocol, "udp") == 0) {
+            device = NEW_NOTHROW UDPDevice(_ip, _base_port, bcast, false);
+        } else {
+            if (bcast) {
+                AP_HAL::panic("Can't combine udpin with bcast");
+            }
+            device = NEW_NOTHROW UDPDevice(_ip, _base_port, false, true);
+
+        }
+    }
+
+    free(devstr);
+    return device;
+}
 /*
   shutdown a UART
  */
