@@ -547,6 +547,12 @@ void AP_Baro::init(void)
 #endif
 #endif
 
+#if (CONFIG_HAL_BOARD == HAL_BOARD_EMBOX) && AP_BARO_DUMMY_ENABLED
+    for (uint8_t i = 0; i < BARO_MAX_DRIVERS; i++) {
+        ADD_BACKEND(AP_Baro_Dummy::probe(*this));
+    }
+#endif
+
 #if AP_BARO_DRONECAN_ENABLED
     // Detect UAVCAN Modules, try as many times as there are driver slots
     for (uint8_t i = 0; i < BARO_MAX_DRIVERS; i++) {
