@@ -1,5 +1,6 @@
 package ext_project.ardupilot
 
+@App
 @AutoCmd
 @CxxCmd(name="arducopter", help="TODO")
 @BuildDepends(embox.cxx.LibCxx)
