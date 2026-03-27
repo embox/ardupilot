@@ -23,7 +23,6 @@ using namespace Embox;
 
 static uint8_t i2c_bus_ids[] = {1, 2};
 
-
 I2CBus I2CDeviceManager::businfo[ARRAY_SIZE(i2c_bus_ids)];
 
 I2CDeviceManager::I2CDeviceManager(void) {}
@@ -75,11 +74,11 @@ bool I2CDevice::transfer(const uint8_t *send, uint32_t send_len, uint8_t *recv,
     return false;
   }
 
-// if (!bus.semaphore.check_owner()) {
-//     return false;
-//   }
-  
-  return i2c_bus_transfer(bus.bus_id, msgs, nmsgs)>= 0;
+  // if (!bus.semaphore.check_owner()) {
+  //     return false;
+  //   }
+
+  return i2c_bus_transfer(bus.bus_id, msgs, nmsgs) >= 0;
 }
 
 /*
@@ -113,16 +112,18 @@ I2CDeviceManager::get_device(uint8_t bus, uint8_t address, uint32_t bus_clock,
 /*
   get mask of bus numbers for all configured I2C buses
 */
-uint32_t I2CDeviceManager::get_bus_mask(void) const { return 0b11; }
+uint32_t I2CDeviceManager::get_bus_mask(void) const {
+  return i2c_bus_get_mask();
+}
 
 /*
   get mask of bus numbers for all configured internal I2C buses
 */
-uint32_t I2CDeviceManager::get_bus_mask_internal(void) const { return 0b01; }
+uint32_t I2CDeviceManager::get_bus_mask_internal(void) const { return 0b0; }
 
 /*
   get mask of bus numbers for all configured external I2C buses
 */
 uint32_t I2CDeviceManager::get_bus_mask_external(void) const {
-  return get_bus_mask() & ~get_bus_mask_internal() ;
+  return (get_bus_mask() & ~get_bus_mask_internal()) & 0xfffffffeu;
 }
