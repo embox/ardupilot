@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2015-2016  Intel Corporation. All rights reserved.
- *
  * This file is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
@@ -16,80 +14,128 @@
  */
 #pragma once
 
-#include <inttypes.h>
+#include <cstdint>
 
 #include <AP_HAL/HAL.h>
 #include <AP_HAL/I2CDevice.h>
 #include <AP_HAL/utility/OwnPtr.h>
 
-namespace Embox {
+#include "Semaphores.h"
+#include "Scheduler.h"
+#include "DeviceBus.h"
 
-class I2CDevice : public AP_HAL::I2CDevice {
+namespace Embox
+{
+
+class I2CBus : public DeviceBus
+{
 public:
-    I2CDevice()
+    I2CBus():DeviceBus(AP_HAL::Scheduler::PRIORITY_I2C) {};
+    uint32_t bus_id;
+    uint32_t bus_clock;
+    uint8_t last_address;
+};
+
+class I2CDevice : public AP_HAL::I2CDevice
+{
+public:
+    static I2CDevice *from(AP_HAL::I2CDevice *dev)
     {
+        return static_cast<I2CDevice*>(dev);
     }
 
-    virtual ~I2CDevice() { }
-
-    /* AP_HAL::I2CDevice implementation */
+    I2CDevice(uint8_t bus, uint8_t address, uint32_t bus_clock, bool use_smbus, uint32_t timeout_ms);
+    ~I2CDevice();
 
     /* See AP_HAL::I2CDevice::set_address() */
-    void set_address(uint8_t address) override { }
+    void set_address(uint8_t address) override
+    {
+        _address = address;
+    }
 
     /* See AP_HAL::I2CDevice::set_retries() */
-    void set_retries(uint8_t retries) override { }
+    void set_retries(uint8_t retries) override
+    {
+        _retries = retries;
+    }
 
-
-    /* AP_HAL::Device implementation */
-
-    /* See AP_HAL::Device::transfer() */
-    bool transfer(const uint8_t *send, uint32_t send_len,
-                  uint8_t *recv, uint32_t recv_len) override
+    /* See AP_HAL::Device::set_speed(): Empty implementation, not supported. */
+    bool set_speed(enum Device::Speed speed) override
     {
         return true;
     }
+
+    /* See AP_HAL::Device::transfer() */
+    bool transfer(const uint8_t *send, uint32_t send_len,
+                  uint8_t *recv, uint32_t recv_len) override;
 
     bool read_registers_multiple(uint8_t first_reg, uint8_t *recv,
                                  uint32_t recv_len, uint8_t times) override
     {
-        return true;
-    }
-
-
-    /* See AP_HAL::Device::set_speed() */
-    bool set_speed(enum AP_HAL::Device::Speed speed) override { return true; }
-
-    /* See AP_HAL::Device::get_semaphore() */
-    AP_HAL::Semaphore *get_semaphore() override { return nullptr; }
+        return false;
+    };
 
     /* See AP_HAL::Device::register_periodic_callback() */
     AP_HAL::Device::PeriodicHandle register_periodic_callback(
-        uint32_t period_usec, AP_HAL::Device::PeriodicCb) override
+        uint32_t period_usec, AP_HAL::Device::PeriodicCb) override;
+
+    /* See AP_HAL::Device::adjust_periodic_callback() */
+    bool adjust_periodic_callback(AP_HAL::Device::PeriodicHandle h, uint32_t period_usec) override;
+
+    AP_HAL::Semaphore* get_semaphore() override //TODO check all
     {
-        return nullptr;
+        // if asking for invalid bus number use bus 0 semaphore
+        return &bus.semaphore;
     }
 
-    /* See Device::adjust_periodic_callback() */
-    virtual bool adjust_periodic_callback(
-        AP_HAL::Device::PeriodicHandle h, uint32_t period_usec) override
-    {
-        return true;
+     /* set split transfers flag */
+    void set_split_transfers(bool set) override {
+        _split_transfers = set;
     }
+
+protected:
+    I2CBus &bus;
+    uint8_t _retries;
+    uint8_t _address;
+    uint32_t _bus_clock;
+    bool _split_transfers = false;
+    char *pname;
+
 };
 
-class I2CDeviceManager : public AP_HAL::I2CDeviceManager {
+class I2CDeviceManager : public AP_HAL::I2CDeviceManager
+{
 public:
-    I2CDeviceManager() { }
+    friend class I2CDevice;
 
-    /* AP_HAL::I2CDeviceManager implementation */
-    AP_HAL::OwnPtr<AP_HAL::I2CDevice> get_device(uint8_t bus, uint8_t address,
-                                                 uint32_t bus_clock=400000,
-                                                 bool use_smbus = false,
-                                                 uint32_t timeout_ms=4) override
+    static I2CBus businfo[];
+
+    // constructor
+    I2CDeviceManager();
+
+    static I2CDeviceManager *from(AP_HAL::I2CDeviceManager *i2c_mgr)
     {
-        return nullptr;
+        return static_cast<I2CDeviceManager*>(i2c_mgr);
     }
-};
 
+    AP_HAL::OwnPtr<AP_HAL::I2CDevice> get_device(uint8_t bus, uint8_t address,
+            uint32_t bus_clock=100000,
+            bool use_smbus = false,
+            uint32_t timeout_ms=4) override;
+
+    /*
+      get mask of bus numbers for all configured I2C buses
+     */
+    uint32_t get_bus_mask(void) const override;
+
+    /*
+      get mask of bus numbers for all configured external I2C buses
+     */
+    uint32_t get_bus_mask_external(void) const override;
+
+    /*
+      get mask of bus numbers for all configured internal I2C buses
+     */
+    uint32_t get_bus_mask_internal(void) const override;
+};
 }
