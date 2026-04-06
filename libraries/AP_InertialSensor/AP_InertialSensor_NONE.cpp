@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <GCS_MAVLink/GCS.h>
 
-#if CONFIG_HAL_BOARD == HAL_BOARD_ESP32
+#if CONFIG_HAL_BOARD == HAL_BOARD_ESP32 || CONFIG_HAL_BOARD == HAL_BOARD_EMBOX
 
 
 static float sim_rand_float(void)
