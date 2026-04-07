@@ -30,55 +30,60 @@ I2CDeviceManager::I2CDeviceManager(void) {}
 I2CDevice::I2CDevice(uint8_t busnum, uint8_t address, uint32_t bus_clock,
                      bool use_smbus, uint32_t timeout_ms)
     : bus(I2CDeviceManager::businfo[busnum]), _address(address),
-      _bus_clock(bus_clock) {
-  if (busnum >= ARRAY_SIZE(i2c_bus_ids)) {
-    return;
-  }
+      _bus_clock(bus_clock)
+{
+    if (busnum >= ARRAY_SIZE(i2c_bus_ids)) {
+        return;
+    }
 
-  set_device_bus(busnum);
-  set_device_address(address);
-  bus.bus_id = busnum;
-  asprintf(&pname, "I2C:%u:%02x", (unsigned)busnum, (unsigned)address);
+    set_device_bus(busnum);
+    set_device_address(address);
+    bus.bus_id = busnum;
+    asprintf(&pname, "I2C:%u:%02x", (unsigned)busnum, (unsigned)address);
 }
 
-I2CDevice::~I2CDevice() { free(pname); }
+I2CDevice::~I2CDevice()
+{
+    free(pname);
+}
 
 bool I2CDevice::transfer(const uint8_t *send, uint32_t send_len, uint8_t *recv,
-                         uint32_t recv_len) {
-  if (_split_transfers && send_len > 0 && recv_len > 0) {
-    return transfer(send, send_len, nullptr, 0) &&
-           transfer(nullptr, 0, recv, recv_len);
-  }
+                         uint32_t recv_len)
+{
+    if (_split_transfers && send_len > 0 && recv_len > 0) {
+        return transfer(send, send_len, nullptr, 0) &&
+               transfer(nullptr, 0, recv, recv_len);
+    }
 
-  struct i2c_msg msgs[2] = {};
-  unsigned nmsgs = 0;
+    struct i2c_msg msgs[2] = {};
+    unsigned nmsgs = 0;
 
-  if (send && send_len != 0) {
-    msgs[nmsgs].addr = _address;
-    msgs[nmsgs].flags = 0;
-    msgs[nmsgs].buf = const_cast<uint8_t *>(send);
-    msgs[nmsgs].len = send_len;
-    nmsgs++;
-  }
+    if (send && send_len != 0) {
+        msgs[nmsgs].addr = _address;
+        msgs[nmsgs].flags = 0;
+        msgs[nmsgs].buf = const_cast<uint8_t *>(send);
+        msgs[nmsgs].len = send_len;
+        nmsgs++;
+    }
 
-  if (recv && recv_len != 0) {
-    msgs[nmsgs].addr = _address;
-    msgs[nmsgs].flags = I2C_M_RD;
-    msgs[nmsgs].buf = recv;
-    msgs[nmsgs].len = recv_len;
-    nmsgs++;
-  }
+    if (recv && recv_len != 0) {
+        msgs[nmsgs].addr = _address;
+        msgs[nmsgs].flags = I2C_M_RD;
+        msgs[nmsgs].buf = recv;
+        msgs[nmsgs].len = recv_len;
+        nmsgs++;
+    }
 
-  /* interpret it as an input error if nothing has to be done */
-  if (!nmsgs) {
-    return false;
-  }
+    /* interpret it as an input error if nothing has to be done */
+    if (!nmsgs) {
+        return false;
+    }
 
-  // if (!bus.semaphore.check_owner()) {
-  //     return false;
-  //   }
+    // if (!bus.semaphore.check_owner()) {
+    //     return false;
+    //   }
 
-  return i2c_bus_transfer(bus.bus_id, msgs, nmsgs) >= 0;
+    return i2c_bus_transfer(bus.bus_id, msgs, nmsgs) >= 0;
 }
 
 /*
@@ -86,44 +91,52 @@ bool I2CDevice::transfer(const uint8_t *send, uint32_t send_len, uint8_t *recv,
 */
 AP_HAL::Device::PeriodicHandle
 I2CDevice::register_periodic_callback(uint32_t period_usec,
-                                      AP_HAL::Device::PeriodicCb cb) {
-  return bus.register_periodic_callback(period_usec, cb, this);
+                                      AP_HAL::Device::PeriodicCb cb)
+{
+    return bus.register_periodic_callback(period_usec, cb, this);
 }
 
 /*
   adjust a periodic callback
 */
 bool I2CDevice::adjust_periodic_callback(AP_HAL::Device::PeriodicHandle h,
-                                         uint32_t period_usec) {
-  return bus.adjust_timer(h, period_usec);
+        uint32_t period_usec)
+{
+    return bus.adjust_timer(h, period_usec);
 }
 
 AP_HAL::OwnPtr<AP_HAL::I2CDevice>
 I2CDeviceManager::get_device(uint8_t bus, uint8_t address, uint32_t bus_clock,
-                             bool use_smbus, uint32_t timeout_ms) {
-  if (bus >= ARRAY_SIZE(i2c_bus_ids)) {
-    return AP_HAL::OwnPtr<AP_HAL::I2CDevice>(nullptr);
-  }
-  auto dev = AP_HAL::OwnPtr<AP_HAL::I2CDevice>(
-      new I2CDevice(bus, address, bus_clock, use_smbus, timeout_ms));
-  return dev;
+                             bool use_smbus, uint32_t timeout_ms)
+{
+    if (bus >= ARRAY_SIZE(i2c_bus_ids)) {
+        return AP_HAL::OwnPtr<AP_HAL::I2CDevice>(nullptr);
+    }
+    auto dev = AP_HAL::OwnPtr<AP_HAL::I2CDevice>(
+                   new I2CDevice(bus, address, bus_clock, use_smbus, timeout_ms));
+    return dev;
 }
 
 /*
   get mask of bus numbers for all configured I2C buses
 */
-uint32_t I2CDeviceManager::get_bus_mask(void) const {
-  return i2c_bus_get_mask();
+uint32_t I2CDeviceManager::get_bus_mask(void) const
+{
+    return i2c_bus_get_mask();
 }
 
 /*
   get mask of bus numbers for all configured internal I2C buses
 */
-uint32_t I2CDeviceManager::get_bus_mask_internal(void) const { return 0b0; }
+uint32_t I2CDeviceManager::get_bus_mask_internal(void) const
+{
+    return 0b0;
+}
 
 /*
   get mask of bus numbers for all configured external I2C buses
 */
-uint32_t I2CDeviceManager::get_bus_mask_external(void) const {
-  return (get_bus_mask() & ~get_bus_mask_internal()) & 0xfffffffeu;
+uint32_t I2CDeviceManager::get_bus_mask_external(void) const
+{
+    return (get_bus_mask() & ~get_bus_mask_internal()) & 0xfffffffeu;
 }

@@ -88,8 +88,9 @@ public:
         return &bus.semaphore;
     }
 
-     /* set split transfers flag */
-    void set_split_transfers(bool set) override {
+    /* set split transfers flag */
+    void set_split_transfers(bool set) override
+    {
         _split_transfers = set;
     }
 
