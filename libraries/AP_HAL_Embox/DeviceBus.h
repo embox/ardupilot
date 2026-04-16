@@ -28,7 +28,7 @@ class DeviceBus
 public:
     DeviceBus(AP_HAL::Scheduler::priority_base _thread_priority);
 
-    struct DeviceBus *next;
+    // class DeviceBus *next;
     HAL_Semaphore semaphore;
 
     AP_HAL::Device::PeriodicHandle register_periodic_callback(uint32_t period_usec, AP_HAL::Device::PeriodicCb, AP_HAL::Device *hal_device);
