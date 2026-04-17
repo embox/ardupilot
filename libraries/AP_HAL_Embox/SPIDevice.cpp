@@ -17,6 +17,8 @@
 #include "SPIDevice.h"
 
 #include <assert.h>
+#include <cstdint>
+#include <cstring>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -44,7 +46,7 @@ namespace Embox {
 #define KHZ (1000U)
 
 // TODO
-#define BUS_NUM 2
+#define BUS_NUM 3
 
 SPIBus SPIDeviceManager::businfo[BUS_NUM];
 
@@ -53,7 +55,8 @@ SPIDevice::SPIDevice(SPIBus &bus, struct spi_device *device)
     , dev(device)
 {
     set_device_bus(bus.bus_id);
-    
+    device->spid_flags |= SPI_CS_ACTIVE;
+	device->spid_flags |= SPI_CS_INACTIVE;
     // TODO
     _speed = 0;
 }
@@ -75,13 +78,43 @@ bool SPIDevice::set_speed(AP_HAL::Device::Speed speed)
 bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
                          uint8_t *recv, uint32_t recv_len)
 {
-    return transfer_fullduplex(send, recv, send_len);
+    if (recv_len == 0) {
+        uint8_t tx[send_len];
+        uint8_t rx[send_len];
+        memcpy(tx, send, send_len);
+
+        return transfer_fullduplex(tx, rx, send_len); 
+    }
+    uint32_t len = (send_len > recv_len)?send_len:recv_len + 1;
+    uint8_t *tx = (uint8_t *)calloc(len, sizeof(uint8_t));
+    uint8_t *rx = (uint8_t *)calloc(len, sizeof(uint8_t));
+    memcpy(tx, send, send_len);
+    bool res = transfer_fullduplex(tx, rx, len);
+    memcpy(recv, rx+1, recv_len);
+    return res;
 }
 
 bool SPIDevice::transfer_fullduplex(const uint8_t *send, uint8_t *recv,
                                     uint32_t len)
 {
-    return spi_transfer(dev, recv, (uint8_t*)send, len)?true:false;
+    // if (_read_flag) {
+    //     len++;
+    // }
+    // uint8_t rx[len];
+    // uint8_t tx[len];
+    // memcpy(tx, send, len);
+    // if (_read_flag) {
+    //     tx[len-1]=0;
+    // }
+
+    // bool res = spi_transfer(dev, tx, rx, len)?true:false;
+    // if (_read_flag) {
+    //         memcpy(recv, rx + 1, len - 1);
+
+    // }
+    // return res;
+    return spi_transfer(dev, (uint8_t *)send, recv, len)?true:false;
+
 }
 
 AP_HAL::Semaphore *SPIDevice::get_semaphore()
