@@ -31,13 +31,6 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/utility/OwnPtr.h>
 
-#include "GPIO.h"
-#include "Scheduler.h"
-#include "Semaphores.h"
-#include "Thread.h"
-#include "Util.h"
-#include "Util.h"
-
 extern const AP_HAL::HAL& hal;
 
 namespace Embox {
@@ -56,7 +49,7 @@ SPIDevice::SPIDevice(SPIBus &bus, struct spi_device *device)
 {
     set_device_bus(bus.bus_id);
     device->spid_flags |= SPI_CS_ACTIVE;
-	device->spid_flags |= SPI_CS_INACTIVE;
+    device->spid_flags |= SPI_CS_INACTIVE;
     // TODO
     _speed = 0;
 }
@@ -82,9 +75,9 @@ bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
         uint8_t tx[send_len];
         uint8_t rx[send_len];
         memcpy(tx, send, send_len);
-
-        return transfer_fullduplex(tx, rx, send_len); 
+        return transfer_fullduplex(tx, rx, send_len);
     }
+
     uint32_t len = (send_len > recv_len)?send_len:recv_len + 1;
     uint8_t *tx = (uint8_t *)calloc(len, sizeof(uint8_t));
     uint8_t *rx = (uint8_t *)calloc(len, sizeof(uint8_t));
@@ -97,24 +90,7 @@ bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
 bool SPIDevice::transfer_fullduplex(const uint8_t *send, uint8_t *recv,
                                     uint32_t len)
 {
-    // if (_read_flag) {
-    //     len++;
-    // }
-    // uint8_t rx[len];
-    // uint8_t tx[len];
-    // memcpy(tx, send, len);
-    // if (_read_flag) {
-    //     tx[len-1]=0;
-    // }
-
-    // bool res = spi_transfer(dev, tx, rx, len)?true:false;
-    // if (_read_flag) {
-    //         memcpy(recv, rx + 1, len - 1);
-
-    // }
-    // return res;
-    return spi_transfer(dev, (uint8_t *)send, recv, len)?true:false;
-
+    return spi_transfer(dev, (uint8_t *)send, recv, len)?false:true;
 }
 
 AP_HAL::Semaphore *SPIDevice::get_semaphore()
@@ -146,7 +122,7 @@ SPIDeviceManager::get_device(const char *name)
         return AP_HAL::OwnPtr<AP_HAL::SPIDevice>(nullptr);
     }
 
-    
+
     auto d = AP_HAL::OwnPtr<AP_HAL::SPIDevice>(NEW_NOTHROW SPIDevice(businfo[dev->spid_bus_num], dev));
 
     if (!dev) {
@@ -156,47 +132,4 @@ SPIDeviceManager::get_device(const char *name)
 
     return d;
 }
-
-// uint8_t SPIDeviceManager::get_count()
-// {
-//    return _n_device_desc;
-// }
-
-// const char* SPIDeviceManager::get_device_name(uint8_t idx)
-// {
-//     return _device[idx].name;
-// }
-
-// /* Create a new device increasing the bus reference */
-// AP_HAL::OwnPtr<AP_HAL::SPIDevice>
-// SPIDeviceManager::_create_device(SPIBus &b, SPIDesc &desc) const
-// {
-//     // Ensure bus is open
-//     b.open(desc.subdev);
-
-//     auto dev = AP_HAL::OwnPtr<AP_HAL::SPIDevice>(NEW_NOTHROW SPIDevice(b, desc));
-//     if (!dev) {
-//         return nullptr;
-//     }
-
-//     b.ref++;
-
-//     return dev;
-// }
-
-
-
-// void SPIDeviceManager::teardown()
-// {
-//     for (auto it = _buses.begin(); it != _buses.end(); it++) {
-//         /* Try to stop thread - it may not even be started yet */
-//         (*it)->thread.stop();
-//     }
-
-//     for (auto it = _buses.begin(); it != _buses.end(); it++) {
-//         /* Try to join thread - failing is normal if thread was not started */
-//         (*it)->thread.join();
-//     }
-// }
-
 }
