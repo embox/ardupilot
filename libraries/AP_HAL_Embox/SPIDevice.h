@@ -20,65 +20,64 @@
 
 #include <AP_HAL/HAL.h>
 #include <AP_HAL/SPIDevice.h>
+#include "DeviceBus.h"
+
+#include <drivers/spi.h>
 
 #include "Semaphores.h"
 
 namespace Embox {
+class SPIBus : public DeviceBus {
+public:
+    SPIBus():DeviceBus(AP_HAL::Scheduler::PRIORITY_I2C) {};
+    uint32_t bus_id;
+};
 
 class SPIDevice : public AP_HAL::SPIDevice {
 public:
-    SPIDevice()
-    {
-    }
+    SPIDevice(SPIBus &bus, struct spi_device *dev);
 
     virtual ~SPIDevice() { }
 
     /* AP_HAL::Device implementation */
 
     /* See AP_HAL::Device::set_speed() */
-    bool set_speed(AP_HAL::Device::Speed speed) override
-    {
-        return true;
-    }
+    bool set_speed(AP_HAL::Device::Speed speed) override;
 
     /* See AP_HAL::Device::transfer() */
     bool transfer(const uint8_t *send, uint32_t send_len,
-                  uint8_t *recv, uint32_t recv_len) override
-    {
-        return true;
-    }
+                  uint8_t *recv, uint32_t recv_len) override;
 
     /* See AP_HAL::SPIDevice::transfer_fullduplex() */
     bool transfer_fullduplex(const uint8_t *send, uint8_t *recv,
-                             uint32_t len) override
-    {
-        return true;
-    }
+                             uint32_t len) override;
 
     /* See AP_HAL::Device::get_semaphore() */
-    AP_HAL::Semaphore *get_semaphore() override
-    {
-        return &_semaphore;
-    }
+    AP_HAL::Semaphore *get_semaphore() override;
 
     /* See AP_HAL::Device::register_periodic_callback() */
     AP_HAL::Device::PeriodicHandle register_periodic_callback(
-        uint32_t period_usec, AP_HAL::Device::PeriodicCb) override
-    {
-        return nullptr;
-    }
+        uint32_t period_usec, AP_HAL::Device::PeriodicCb) override;
+
+    bool adjust_periodic_callback(
+        AP_HAL::Device::PeriodicHandle h, uint32_t period_usec) override;
 
 private:
-    Semaphore _semaphore;
+    SPIBus &bus;
+    uint32_t _speed;
+    struct spi_device *dev;
 };
 
 class SPIDeviceManager : public AP_HAL::SPIDeviceManager {
 public:
-    SPIDeviceManager() { }
-    AP_HAL::OwnPtr<AP_HAL::SPIDevice> get_device(const char *name) override
+    static SPIDeviceManager *from(AP_HAL::SPIDeviceManager *spi_mgr)
     {
-        return AP_HAL::OwnPtr<AP_HAL::SPIDevice>(NEW_NOTHROW SPIDevice());
+        return static_cast<SPIDeviceManager*>(spi_mgr);
     }
+    SPIDeviceManager() { }
+    AP_HAL::OwnPtr<AP_HAL::SPIDevice> get_device(const char *name) override;
+private:
+    static SPIBus businfo[];
 };
 
 }

@@ -183,3 +183,9 @@
 // #define AP_ROMFS 0
 
 // #define AP_CUSTOMCONTROL_ENABLED 0
+
+
+// Uncomment this to use MPU6000 IMU
+// #define PROBE_IMU_SPI(driver, devname, args ...) ADD_BACKEND(AP_InertialSensor_ ## driver::probe(*this,hal.spi->get_device(devname),##args))
+
+// #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6000", ROTATION_YAW_90);
