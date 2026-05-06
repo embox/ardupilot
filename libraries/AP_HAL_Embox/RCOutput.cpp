@@ -13,10 +13,14 @@ uint16_t RCOutput::get_freq(uint8_t chan) {
 }
 
 void RCOutput::enable_ch(uint8_t chan)
-{}
+{
+    pwm_enable(dev[chan]);
+}
 
 void RCOutput::disable_ch(uint8_t chan)
-{}
+{
+    pwm_disable(dev[chan]);
+}
 
 void RCOutput::write(uint8_t chan, uint16_t period_us)
 {

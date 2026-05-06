@@ -2,6 +2,7 @@
 
 #include "Util.h"
 #include "AP_HAL_Embox.h"
+#include <drivers/pwm.h>
 
 namespace Embox {
     class RCOutput : public AP_HAL::RCOutput {
@@ -21,7 +22,9 @@ namespace Embox {
         }
 
     private:
+        struct pwm_device** dev;
         uint16_t value[16];
+        uint16_t freq[16];
         bool safety_on = true;
     };
 } // namespace Embox
