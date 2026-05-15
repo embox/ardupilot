@@ -1,4 +1,5 @@
 #include "RCOutput.h"
+#include "AP_Common/AP_Common.h"
 #include <AP_Math/AP_Math.h>
 
 using namespace Embox;
@@ -62,7 +63,7 @@ void RCOutput::push(void)
     if (!_corked) {
         return;
     }
-    for (uint8_t i=0; i<4; i++) {
+    for (uint8_t i = 0; i < ARRAY_SIZE(value); i++) {
         if ((1U<<i) & _pending_mask) {
             pwm_set_duty(dev, i, value[i]);
         }

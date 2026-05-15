@@ -21,7 +21,7 @@ namespace Embox {
 
     private:
         struct pwm_device* dev;
-        uint16_t value[4];
+        uint16_t value[3];
         uint8_t _pending_mask = 0;
         uint16_t frec;
         bool _corked = false;
