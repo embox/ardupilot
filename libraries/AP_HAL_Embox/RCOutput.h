@@ -16,15 +16,15 @@ namespace Embox {
         void write(uint8_t ch, uint16_t period_us) override;
         uint16_t read(uint8_t ch) override;
         void read(uint16_t* period_us, uint8_t len) override;
-        void cork(void) override {
-        }
-        void push(void) override {
-        }
+        void cork(void) override;
+        void push(void) override;
 
     private:
-        struct pwm_device** dev;
-        uint16_t value[16];
-        uint16_t freq[16];
+        struct pwm_device* dev;
+        uint16_t value[4];
+        uint8_t _pending_mask = 0;
+        uint16_t frec;
+        bool _corked = false;
         bool safety_on = true;
     };
 } // namespace Embox
