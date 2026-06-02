@@ -2,9 +2,18 @@
 
 #include "Util.h"
 #include "AP_HAL_Embox.h"
+#include <cstdint>
 #include <drivers/pwm.h>
 
 namespace Embox {
+
+    struct pwm_channel {
+        struct pwm_device* dev;
+        uint32_t value;
+        uint16_t freq;
+        uint8_t ch;
+    };
+
     class RCOutput : public AP_HAL::RCOutput {
         friend class Embox::Util;
 
@@ -21,9 +30,9 @@ namespace Embox {
 
     private:
         struct pwm_device* dev;
-        uint16_t value[3];
-        uint8_t _pending_mask = 0;
-        uint16_t frec;
+        struct pwm_channel channels[16];
+        uint8_t n;
+        uint16_t _pending_mask = 0;
         bool _corked = false;
         bool safety_on = true;
     };
