@@ -93,14 +93,6 @@
 // #define HAL_EXTERNAL_AHRS_ENABLED 0
 #define AP_FOLLOW_ENABLED 0
 
-#define AP_BARO_BMP280_ENABLED 0
-#define AP_BARO_PROBE_EXT_PARAMETER_ENABLED 0
-
-// Uncomment this to use BMP280 baro
-// #define AP_BARO_ENABLED 1
-// #define AP_BARO_BMP280_ENABLED 1
-// #define AP_BARO_PROBE_EXT_PARAMETER_ENABLED 1
-// #define HAL_BARO_PROBE_EXT_DEFAULT 7
 
 #define AP_BARO_SPL06_ENABLED 0
 #define AP_BARO_SPL06_BACKGROUND_ENABLE 0
@@ -186,6 +178,30 @@
 
 
 // Uncomment this to use MPU6000 IMU
-// #define PROBE_IMU_SPI(driver, devname, args ...) ADD_BACKEND(AP_InertialSensor_ ## driver::probe(*this,hal.spi->get_device(devname),##args))
+#define PROBE_IMU_SPI(driver, devname, args ...) ADD_BACKEND(AP_InertialSensor_ ## driver::probe(*this,hal.spi->get_device(devname),##args))
+
+#include <ardupilot_conf.h>
 
 // #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6000", ROTATION_YAW_90);
+
+#ifndef AP_BARO_ENABLED
+#define AP_BARO_ENABLED 0
+#endif
+
+#ifndef HAL_BARO_PROBE_EXT_DEFAULT
+#define HAL_BARO_PROBE_EXT_DEFAULT 0
+#endif
+
+#ifndef AP_BARO_BMP280_ENABLED
+#define AP_BARO_BMP280_ENABLED 0
+#endif
+
+#ifndef AP_BARO_PROBE_EXT_PARAMETER_ENABLED
+#define AP_BARO_PROBE_EXT_PARAMETER_ENABLED 0
+#endif
+
+// Uncomment this to use BMP280 baro
+// #define AP_BARO_ENABLED 1
+// #define AP_BARO_BMP280_ENABLED 1
+// #define AP_BARO_PROBE_EXT_PARAMETER_ENABLED 1
+// #define HAL_BARO_PROBE_EXT_DEFAULT 7
