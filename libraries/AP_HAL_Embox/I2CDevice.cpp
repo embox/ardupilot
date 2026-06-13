@@ -138,5 +138,5 @@ uint32_t I2CDeviceManager::get_bus_mask_internal(void) const
 */
 uint32_t I2CDeviceManager::get_bus_mask_external(void) const
 {
-    return (get_bus_mask() & ~get_bus_mask_internal()) & 0xfffffffeu;
+    return (get_bus_mask() & ~get_bus_mask_internal()) & 0xffffffffu;
 }
