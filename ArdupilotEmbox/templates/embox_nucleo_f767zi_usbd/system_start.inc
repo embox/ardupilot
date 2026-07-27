@@ -8,6 +8,6 @@
 //"netmanager",
 //"arducopter --serial0=udp:192.168.2.1:14550",
 
-//"arducopter --serial0=/dev/ttyS1",
+"arducopter --serial0=/dev/ttyACM0",
 
 "tish",
