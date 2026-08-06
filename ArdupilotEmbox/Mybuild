@@ -16,4 +16,8 @@ module arducopter {
 	@NoRuntime depends embox.cxx.LibCxx
 	@NoRuntime depends embox.compat.posix.stubs
 	@NoRuntime depends embox.compat.posix.unistd.pipe
+
+	@NoRuntime depends embox.driver.i2c_core
+	@NoRuntime depends embox.driver.spi.core
+	@NoRuntime depends embox.driver.pwm.pwm_dev
 }
