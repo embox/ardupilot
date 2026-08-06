@@ -43,7 +43,7 @@ bool UARTDevice::open()
         return false;
     }
 
-    _disable_crlf();
+    // _disable_crlf();
 
     return true;
 }
