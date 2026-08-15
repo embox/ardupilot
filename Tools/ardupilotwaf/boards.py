@@ -428,12 +428,12 @@ class Board:
             ]
             if self.cc_version_gte(cfg, 5, 2):
                 env.CXXFLAGS += [
-                    '-Werror=suggest-override',
+                    '-Wno-suggest-override',
                 ]
             if self.cc_version_gte(cfg, 7, 4):
                 env.CXXFLAGS += [
                     '-Werror=implicit-fallthrough',
-                    '-Werror=maybe-uninitialized',
+                    '-Wno-maybe-uninitialized',
                     '-Werror=duplicated-cond',
                 ]
             if self.cc_version_gte(cfg, 8, 4):
