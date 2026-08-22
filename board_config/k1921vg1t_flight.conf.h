@@ -2,9 +2,43 @@
 
 #include <soc/niiet_k1921vg1t_chip.h>
 
-#define HSECLK_VAL 27000000UL
+#define HSECLK_VAL    27000000UL
+#define SYSTEM_FREQ  150000000UL
 
+#define PLL0_DIV_NDIV      (100)
+#define PLL0_DIV_PREDIV    (1)
+#define PLL0_DIV_RDIV      (2)
+#define PLL0_DIV_DIV1A     (1)
+#define PLL0_DIV_DIV1B     (2)
+#define PLL0_FRAC          (1)
+#define PLL0_MOD           (1)
 
+//FOUT = 60 000 000 Hz  from 27 MHz HSE
+#define PLL1_DIV_NDIV      (100)
+#define PLL1_DIV_PREDIV    (1)
+#define PLL1_DIV_RDIV      (2)
+#define PLL1_DIV_DIV1A     (4)
+#define PLL1_DIV_DIV1B     (2)
+#define PLL1_FRAC          (1)
+#define PLL1_MOD           (1)
+
+/*
+    //FOUT = 150 000 000 Hz  from 27 MHz HSE
+    RCU->PLL[0].DIV = ( 1 << RCU_PLL_DIV_DIV1A_Pos ) |
+                  ( 2 << RCU_PLL_DIV_DIV1B_Pos ) |
+                  ( 1 << RCU_PLL_DIV_PREDIV_Pos) |
+                  ( 1 << RCU_PLL_DIV_NNCLR_Pos ) |             // N-divider enable
+                  ( 1 << RCU_PLL_DIV_RNCLR_Pos ) |             // R-divider enable
+                  ( 2 << RCU_PLL_DIV_RDIV_Pos  ) |
+                  (100 << RCU_PLL_DIV_NDIV_Pos );
+	RCU->PLL[0].MOD  = (1 <<  RCU_PLL_MOD_MOD_Pos );
+	RCU->PLL[0].FRAC = (1 << RCU_PLL_FRAC_FRAC_Pos );
+	RCU->PLL[0].CFG  = (1 << RCU_PLL_CFG_FOUTEN_Pos ) |			// Fout enable
+			       (3 << RCU_PLL_CFG_PFD_Pos    ) |
+			       (0 << RCU_PLL_CFG_CLKSEL_Pos ) |
+			       (1 << RCU_PLL_CFG_VCOMODE_Pos) |
+			       (0 << RCU_PLL_CFG_ST_Pos) ;				  // ST = 0 for integer divider
+*/
 struct clk_conf clks[] = {
 	[0] = {
 		.status = ENABLED,
@@ -15,10 +49,25 @@ struct clk_conf clks[] = {
 			},
 			.clocks = {
 				VAL("HSECLK_VAL", HSECLK_VAL),
-			}
+
+				VAL("PLL0_DIV_NDIV", PLL0_DIV_NDIV),
+				VAL("PLL0_DIV_PREDIV", PLL0_DIV_PREDIV),
+				VAL("PLL0_DIV_RDIV", PLL0_DIV_RDIV),
+				VAL("PLL0_DIV_DIV1A", PLL0_DIV_DIV1A),
+				VAL("PLL0_FRAC", PLL0_FRAC),
+				VAL("PLL0_MOD", PLL0_MOD),
+
+				VAL("PLL1_DIV_NDIV", PLL1_DIV_NDIV),
+				VAL("PLL1_DIV_PREDIV", PLL1_DIV_PREDIV),
+				VAL("PLL1_DIV_RDIV", PLL1_DIV_RDIV),
+				VAL("PLL1_DIV_DIV1A", PLL1_DIV_DIV1A),
+				VAL("PLL1_FRAC", PLL1_FRAC),
+				VAL("PLL1_MOD", PLL1_MOD),
+			},
 		},
 		.type = {
 			VAL("SYSCLK_PLL", 1),
+			VAL("USB_PLL_NUM", 1),
 		},
 	},
 	[1] = {
@@ -767,12 +816,15 @@ struct usb_conf usbs[] = {
 				VAL("USB", "CLK_USBD0"),
 			},
 			.misc = {
+				VAL("PHY_EXT", 0),
+				VAL("PHY_POLARITY", 0),
 				VAL("TYPE_FS", 1),
 				VAL("EP_MAX", 4),
 				VAL("EP_MAX_SIZE", 64),
 			},
 		},
 	},
+#if 0
 	[1] = {
 		.status = ENABLED,
 		.dev = {
@@ -798,6 +850,7 @@ struct usb_conf usbs[] = {
 			},
 		},
 	},
+#endif
 };
 
 
