@@ -222,7 +222,7 @@ void Scheduler::_run_uarts() {
 }
 
 void Scheduler::_rcin_task() {
-    RCInput::from(hal.rcin)->_timer_tick();
+	((Embox::RCInput *)hal.rcin)->_timer_tick();
 }
 
 void Scheduler::_uart_task() {
