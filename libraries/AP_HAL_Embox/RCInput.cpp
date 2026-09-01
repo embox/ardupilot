@@ -1,31 +1,65 @@
+#include <AP_Math/AP_Math.h>
+#include <AP_RCProtocol/AP_RCProtocol_config.h>
 
 #include "RCInput.h"
 
 using namespace Embox;
-RCInput::RCInput()
-{}
 
 void RCInput::init()
-{}
-
-bool RCInput::new_input() {
-    return false;
+{
+#if AP_RCPROTOCOL_ENABLED
+    AP::RC().init();
+#endif
 }
 
-uint8_t RCInput::num_channels() {
-    return 0;
+const char *RCInput::protocol() const
+{
+#if AP_RCPROTOCOL_ENABLED
+    return AP::RC().protocol_name();
+#else
+    return "Unknown"
+#endif
 }
 
-uint16_t RCInput::read(uint8_t chan) {
-    if (chan == 2) return 900; /* throttle should be low, for safety */
-    else return 1500;
+bool RCInput::new_input()
+{
+    bool ret = updated;
+    updated = false;
+    return ret;
 }
 
-uint8_t RCInput::read(uint16_t* periods, uint8_t len) {
-    for (uint8_t i = 0; i < len; i++){
-        if (i == 2) periods[i] = 900;
-        else periods[i] = 1500;
+uint8_t RCInput::num_channels()
+{
+    return num_chan;
+}
+
+uint16_t RCInput::read(uint8_t channel)
+{
+    if (channel >= MIN(RC_INPUT_MAX_CHANNELS, num_chan)) {
+        return 0;
     }
+    return values[channel];
+}
+
+uint8_t RCInput::read(uint16_t *periods, uint8_t len)
+{
+    WITH_SEMAPHORE(mutex);
+    len = MIN(len, num_chan);
+    memcpy(periods, values, len * sizeof(periods[0]));
     return len;
 }
 
+void RCInput::_timer_tick(void)
+{
+#if AP_RCPROTOCOL_ENABLED
+    auto &rcprot = AP::RC();
+    WITH_SEMAPHORE(mutex);
+    rcprot.update();
+    if (rcprot.new_input()) {
+        num_chan = rcprot.num_channels();
+        num_chan = MIN(num_chan, RC_INPUT_MAX_CHANNELS);
+        rcprot.read(values, num_chan);
+        updated = true;
+    }
+#endif
+}
