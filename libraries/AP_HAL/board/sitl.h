@@ -96,3 +96,7 @@
 #endif
 
 #define HAL_SOLO_GIMBAL_ENABLED 1
+
+#ifdef __EMBOX__
+#include <ardupilot_conf.h>
+#endif
