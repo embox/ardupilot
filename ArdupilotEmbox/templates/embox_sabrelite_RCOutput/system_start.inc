@@ -8,6 +8,6 @@
 "netmanager",
 
 //"arducopter --serial0=/dev/ttyS1",
-"RCOutput",
+"rcoutput",
 
 "tish",
