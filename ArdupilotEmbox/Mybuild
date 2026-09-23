@@ -9,7 +9,11 @@ module arducopter {
 	option boolean debug=true
 	option boolean scripting=false
 	option boolean networking=false
+	option boolean linker_map=false
+
+	option string flags=""
 	option string board="sitl"
+	option string example="none"
 
 	source "^BUILD/extbld/^MOD_PATH/install/arducopter.o"
 
