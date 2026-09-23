@@ -25,7 +25,7 @@ public:
 
 private:
     HAL_Semaphore mutex;
-    uint16_t pwm_values[RC_INPUT_MAX_CHANNELS];
+    uint16_t rc_values[RC_INPUT_MAX_CHANNELS];
     uint8_t num_chan;
     bool updated;
 };

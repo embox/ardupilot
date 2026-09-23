@@ -38,14 +38,14 @@ uint16_t RCInput::read(uint8_t channel)
     if (channel >= MIN(RC_INPUT_MAX_CHANNELS, num_chan)) {
         return 0;
     }
-    return pwm_values[channel];
+    return rc_values[channel];
 }
 
 uint8_t RCInput::read(uint16_t *periods, uint8_t len)
 {
     WITH_SEMAPHORE(mutex);
     len = MIN(len, num_chan);
-    memcpy(periods, pwm_values, len * sizeof(periods[0]));
+    memcpy(periods, rc_values, len * sizeof(periods[0]));
     return len;
 }
 
@@ -58,7 +58,7 @@ void RCInput::_timer_tick(void)
     if (rcprot.new_input()) {
         num_chan = rcprot.num_channels();
         num_chan = MIN(num_chan, RC_INPUT_MAX_CHANNELS);
-        rcprot.read(pwm_values, num_chan);
+        rcprot.read(rc_values, num_chan);
         updated = true;
     }
 #endif
