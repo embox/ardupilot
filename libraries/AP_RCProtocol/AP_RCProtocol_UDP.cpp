@@ -7,6 +7,7 @@
 #include <AP_HAL/AP_HAL.h>
 #include <AP_Vehicle/AP_Vehicle_Type.h>
 #include <SITL/SITL.h>
+#include <stdio.h>
 
 #if AP_RCPROTOCOL_FDM_ENABLED
 #include "AP_RCProtocol_FDM.h"
@@ -39,14 +40,21 @@ void AP_RCProtocol_UDP::set_default_pwm_input_values()
 
 bool AP_RCProtocol_UDP::init()
 {
+    uint16_t port;
+
+#if CONFIG_HAL_BOARD == HAL_BOARD_SITL
     const auto sitl = AP::sitl();
     if (sitl == nullptr) {
         return false;
     }
+    port = sitl->rcin_port;
+#else
+    port = 5501;
+#endif
     if (!rc_in.reuseaddress()) {
         return false;
     }
-    if (!rc_in.bind("0.0.0.0", sitl->rcin_port)) {
+    if (!rc_in.bind("0.0.0.0", port)) {
         return false;
     }
     if (!rc_in.set_blocking(false)) {
