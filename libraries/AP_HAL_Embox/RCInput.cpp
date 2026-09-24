@@ -17,7 +17,7 @@ const char *RCInput::protocol() const
 #if AP_RCPROTOCOL_ENABLED
     return AP::RC().protocol_name();
 #else
-    return "Unknown"
+    return "Unknown";
 #endif
 }
 
