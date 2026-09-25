@@ -1,6 +1,7 @@
 #include "RCOutput.h"
 #include <AP_Math/AP_Math.h>
 #include <cstdint>
+#include <cstdio>
 
 using namespace Embox;
 
@@ -74,14 +75,18 @@ void RCOutput::write(uint8_t chan, uint16_t period_us)
         return;
     }
 
+	if (channels[chan].value != period_us) {
+		printf("chan = %u, period_us = %u\n",(unsigned)chan, (unsigned)period_us);
+	}
     channels[chan].value = period_us;
-    if (_corked) {
-        _pending_mask |= (1U << chan);
-    } else if (is_dshot_protocol(channels[chan].group->mode)) {
-        dshot_write(chan, period_us);
-    } else {
-        pwm_set_duty(channels[chan].group->dev, channels[chan].local_idx, channels[chan].value * NSEC_PER_USEC);
-    }
+	
+    // if (_corked) {
+    //     _pending_mask |= (1U << chan);
+    // } else if (is_dshot_protocol(channels[chan].group->mode)) {
+    //     dshot_write(chan, period_us);
+    // } else {
+    //     pwm_set_duty(channels[chan].group->dev, channels[chan].local_idx, channels[chan].value * NSEC_PER_USEC);
+    // }
 }
 
 // mode is switched per group: a pwm_device is one hardware timer with a
