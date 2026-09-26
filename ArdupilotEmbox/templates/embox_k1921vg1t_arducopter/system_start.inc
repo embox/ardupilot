@@ -18,4 +18,7 @@
 //"baro --serial0=/dev/ttyACM0",
 //"arducopter --serial0=/dev/ttyACM0",
 
+/* 'serial1' is used for RC via CRSF protocol */
+//"arducopter --serial0=/dev/ttyS1 --serial1=/dev/ttyS2",
+
 "tish",
