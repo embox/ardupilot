@@ -92,7 +92,16 @@ void RCOutput::set_output_mode(uint32_t chmask, enum output_mode mode)
 {
     for (uint8_t chan = 0; chan < n; chan++) {
         if ((1U << chan) & chmask) {
+            if (is_dshot_protocol(mode)) {
+                int res;
+                res = dshot_set_mode(chan, mode);
+                if (res != 0) {
+                    /* couldn't set dshot mode */
+                    continue;
+                }
+            }
             channels[chan].group->mode = mode;
+
         }
     }
 }

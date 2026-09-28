@@ -32,6 +32,36 @@ uint16_t RCOutput::create_dshot_packet(uint16_t value, bool telem_request) {
   return (packet << 4) | csum;
 }
 
+int RCOutput::dshot_set_mode(uint8_t chan, uint16_t mode) {
+  struct motor_dev *motor;
+  struct motor_conf conf;
+
+  motor = motor_dev_by_pwm(channels[chan].group->dev, channels[chan].local_idx);
+  if (!motor) {
+    return -1;
+  }
+  switch(mode) {
+    case AP_HAL::RCOutput::MODE_PWM_DSHOT1200:
+      conf.mc_type = MOTOR_TYPE_DSHOT1200;
+      break;
+    case AP_HAL::RCOutput::MODE_PWM_DSHOT600:
+      conf.mc_type = MOTOR_TYPE_DSHOT600;
+      break;
+    case AP_HAL::RCOutput::MODE_PWM_DSHOT300:
+      conf.mc_type = MOTOR_TYPE_DSHOT300;
+      break;
+        case AP_HAL::RCOutput::MODE_PWM_DSHOT150:
+      conf.mc_type = MOTOR_TYPE_DSHOT150;
+      break;
+    default:
+      return -1;
+  }
+
+  motor_conf(motor, &conf);
+
+  return 0;
+}
+
 /*
   encode period_us (as passed to write(), 1000-2000 like a normal PWM pulse)
   into a dshot packet and log it. No hardware transmission yet.
@@ -50,8 +80,8 @@ void RCOutput::dshot_write(uint8_t chan, uint16_t period_us) {
 
   const uint16_t frame = create_dshot_packet(value, false);
 
-  motor_dev = motor_dev_by_id(chan);
-  msg.mm_buf = &frame;
+  motor_dev = motor_dev_by_pwm(channels[chan].group->dev, channels[chan].local_idx);
+  msg.mm_buf = (void *)&frame;
   msg.mm_len = 2;
 
   motor_send_msg(motor_dev, &msg);

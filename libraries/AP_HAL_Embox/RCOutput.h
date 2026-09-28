@@ -7,7 +7,7 @@
 
 namespace Embox {
 
-    #define GROUPS_NUM 4
+    #define GROUPS_NUM 16
     #define CHANNELS_NUM 16
 
     struct pwm_group {
@@ -52,5 +52,6 @@ namespace Embox {
         // Embox, so dshot_write() logs the encoded frame instead of sending it.
         static uint16_t create_dshot_packet(uint16_t value, bool telem_request);
         void dshot_write(uint8_t chan, uint16_t period_us);
+        int dshot_set_mode(uint8_t chan, uint16_t mode);
     };
 } // namespace Embox
