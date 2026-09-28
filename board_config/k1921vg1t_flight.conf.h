@@ -332,6 +332,59 @@ struct uart_conf uarts[] = {
 
 };
 
+struct dma_conf dmas[] = {
+		[0] = {
+		//.name = "DMA0",
+		.status = ENABLED,
+		.dev = {
+			.name = "DMA0",
+			.regs = {
+				REGMAP("BASE_ADDR", (DMA_BASE), 0x100),
+			},
+			.clocks = {
+				VAL("",  "CLK_DMA0"),
+			},
+			.irqs = {
+				VAL("CHAN0",  PLIC_IRQ_DMA_CH0),
+				VAL("CHAN1",  PLIC_IRQ_DMA_CH1),
+				VAL("CHAN2",  PLIC_IRQ_DMA_CH2),
+				VAL("CHAN3",  PLIC_IRQ_DMA_CH3),
+				VAL("CHAN4",  PLIC_IRQ_DMA_CH4),
+				VAL("CHAN5",  PLIC_IRQ_DMA_CH5),
+				VAL("CHAN6",  PLIC_IRQ_DMA_CH6),
+				VAL("CHAN7",  PLIC_IRQ_DMA_CH7),
+				VAL("CHAN8",  PLIC_IRQ_DMA_CH8),
+				VAL("CHAN9",  PLIC_IRQ_DMA_CH9),
+				VAL("CHAN10", PLIC_IRQ_DMA_CH10),
+				VAL("CHAN11", PLIC_IRQ_DMA_CH11),
+				VAL("CHAN12", PLIC_IRQ_DMA_CH12),
+				VAL("CHAN13", PLIC_IRQ_DMA_CH13),
+				VAL("CHAN14", PLIC_IRQ_DMA_CH14),
+				VAL("CHAN15", PLIC_IRQ_DMA_CH15),
+				VAL("CHAN16", PLIC_IRQ_DMA_CH16),
+				VAL("CHAN17", PLIC_IRQ_DMA_CH17),
+				VAL("CHAN18", PLIC_IRQ_DMA_CH18),
+				VAL("CHAN19", PLIC_IRQ_DMA_CH19),
+				VAL("CHAN20", PLIC_IRQ_DMA_CH20),
+				VAL("CHAN21", PLIC_IRQ_DMA_CH21),
+				VAL("CHAN22", PLIC_IRQ_DMA_CH22),
+				VAL("CHAN23", PLIC_IRQ_DMA_CH23),
+				VAL("CHAN24", PLIC_IRQ_DMA_CH24),
+				VAL("CHAN25", PLIC_IRQ_DMA_CH25),
+				VAL("CHAN26", PLIC_IRQ_DMA_CH26),
+				VAL("CHAN27", PLIC_IRQ_DMA_CH27),
+				VAL("CHAN28", PLIC_IRQ_DMA_CH28),
+				VAL("CHAN29", PLIC_IRQ_DMA_CH29),
+				VAL("CHAN30", PLIC_IRQ_DMA_CH30),
+				VAL("CHAN31", PLIC_IRQ_DMA_CH31),
+			},
+			.misc = {
+				VAL("CHAN_NUM", 32),
+			},
+		},
+	},
+};
+
 struct pwm_conf pwms[] = {
 	[0] = {
 		.name = "PWM0",
@@ -364,10 +417,10 @@ struct pwm_conf pwms[] = {
 				REGMAP("BASE_ADDR", (TMR1_BASE), 0x100),
 			},
 			.pins = {
-				PIN("OUT0", GPIO_PORT_A, 4, GPIO_MODE_ALT, 5),
-				PIN("OUT1", GPIO_PORT_A, 5, GPIO_MODE_ALT, 5),
-				PIN("OUT2", GPIO_PORT_A, 6, GPIO_MODE_ALT, 5),
-				PIN("OUT3", GPIO_PORT_A, 7, GPIO_MODE_ALT, 5),
+				// PIN("OUT0", GPIO_PORT_A, 4, GPIO_MODE_ALT, 5),
+				// PIN("OUT1", GPIO_PORT_A, 5, GPIO_MODE_ALT, 5),
+				// PIN("OUT2", GPIO_PORT_A, 6, GPIO_MODE_ALT, 5),
+				// PIN("OUT3", GPIO_PORT_A, 7, GPIO_MODE_ALT, 5),
 			},
 			.clocks = {
 				VAL("",  "CLK_TMR1"),
@@ -395,6 +448,10 @@ struct pwm_conf pwms[] = {
 			.clocks = {
 				VAL("",  "CLK_TMR2"),
 			},
+			.dmas = {
+				VAL("OUT3_NUM", 0),
+				VAL("OUT3_CHAN", 2),
+			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
 				VAL("TMR_NAME", "TMR2"),
@@ -418,6 +475,10 @@ struct pwm_conf pwms[] = {
 			.clocks = {
 				VAL("",  "CLK_TMR3"),
 			},
+			.dmas = {
+				VAL("OUT3_NUM", 0),
+				VAL("OUT3_CHAN", 3),
+			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
 				VAL("TMR_NAME", "TMR3"),
@@ -437,6 +498,10 @@ struct pwm_conf pwms[] = {
 			},
 			.clocks = {
 				VAL("",  "CLK_TMR10"),
+			},
+			.dmas = {
+				VAL("OUT0_NUM", 0),
+				VAL("OUT0_CHAN", 10),
 			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
@@ -458,6 +523,10 @@ struct pwm_conf pwms[] = {
 			.clocks = {
 				VAL("",  "CLK_TMR12"),
 			},
+			.dmas = {
+				VAL("OUT0_NUM", 0),
+				VAL("OUT0_CHAN", 12),
+			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
 				VAL("TMR_NAME", "TMR12"),
@@ -478,6 +547,10 @@ struct pwm_conf pwms[] = {
 			.clocks = {
 				VAL("",  "CLK_TMR13"),
 			},
+			.dmas = {
+				VAL("OUT0_NUM", 0),
+				VAL("OUT0_CHAN", 13),
+			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
 				VAL("TMR_NAME", "TMR13"),
@@ -496,7 +569,11 @@ struct pwm_conf pwms[] = {
 				PIN("OUT0", GPIO_PORT_D, 7, GPIO_MODE_ALT, 5),
 			},
 			.clocks = {
-				VAL("",  "CLK_TMR143"),
+				VAL("",  "CLK_TMR14"),
+			},
+			.dmas = {
+				VAL("OUT0_NUM", 0),
+				VAL("OUT0_CHAN", 14),
 			},
 			.misc = {
 				VAL("COMP_MASK",  0xFFFFFFFF),
@@ -879,5 +956,5 @@ struct led_conf leds[] = {
 
 };
 
-EXPORT_CONFIG(CLK(clks), GPIO(gpios), UART(uarts), LED(leds),
+EXPORT_CONFIG(CLK(clks), GPIO(gpios), UART(uarts), LED(leds),  DMA(dmas),
 					PWM(pwms), SPI(spis), I2C(i2cs), CAN(cans), USB(usbs))
