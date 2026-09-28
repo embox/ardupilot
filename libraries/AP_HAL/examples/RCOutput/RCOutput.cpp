@@ -26,7 +26,7 @@ void setup (void)
     BoardConfig.init();
 #endif
     // Uncomment the following line to test DShot output. 
-    //hal.rcout->set_output_mode(0x3FFF, AP_HAL::RCOutput::MODE_PWM_DSHOT300);
+    hal.rcout->set_output_mode(0x3FFF, AP_HAL::RCOutput::MODE_PWM_DSHOT600);
     for (uint8_t i = 0; i< 14; i++) {
         hal.rcout->enable_ch(i);
     }
