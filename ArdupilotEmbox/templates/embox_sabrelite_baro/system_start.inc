@@ -7,6 +7,6 @@
 
 "netmanager",
 
-"baro --serial0=/dev/ttyS0",
+"arducopter --serial0=/dev/ttyS0",
 
 "tish",
