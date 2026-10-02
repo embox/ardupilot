@@ -12,11 +12,7 @@
 //"netmanager",
 //"arducopter --serial0=udp:192.168.2.1:14550",
 
-//"arducopter --serial0=/dev/ttyS1",
-
-//"rcoutput",
-//"baro --serial0=/dev/ttyACM0",
-//"arducopter --serial0=/dev/ttyACM0",
+//"arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS2",
 
 /* 'serial1' is used for RC via CRSF protocol */
 //"arducopter --serial0=/dev/ttyACM0 --serial1=/dev/ttyS2",
