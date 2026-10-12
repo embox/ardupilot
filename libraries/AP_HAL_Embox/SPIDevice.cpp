@@ -71,13 +71,6 @@ bool SPIDevice::set_speed(AP_HAL::Device::Speed speed)
 bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
                          uint8_t *recv, uint32_t recv_len)
 {
-    if (recv_len == 0) {
-        uint8_t tx[send_len];
-        uint8_t rx[send_len];
-        memcpy(tx, send, send_len);
-        return transfer_fullduplex(tx, rx, send_len);
-    }
-
     uint32_t len = (send_len > recv_len)?send_len:recv_len + 1;
     uint8_t *tx = (uint8_t *)calloc(len, sizeof(uint8_t));
     if (!tx) {
