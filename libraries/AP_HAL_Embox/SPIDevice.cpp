@@ -72,22 +72,16 @@ bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
                          uint8_t *recv, uint32_t recv_len)
 {
     uint32_t len = (send_len > recv_len)?send_len:recv_len + 1;
-    uint8_t *tx = (uint8_t *)calloc(len, sizeof(uint8_t));
-    if (!tx) {
+    uint8_t *buffer = (uint8_t *)calloc(len, sizeof(uint8_t));
+    if (!buffer) {
         return false;
     }
-    uint8_t *rx = (uint8_t *)calloc(len, sizeof(uint8_t));
-    if (!rx) {
-        free(tx);
-        return false;
-    }
-    memcpy(tx, send, send_len);
-    bool res = transfer_fullduplex(tx, rx, len);
+    memcpy(buffer, send, send_len);
+    bool res = transfer_fullduplex(buffer, buffer, len);
     if (res) {
-        memcpy(recv, rx+1, recv_len);
+        memcpy(recv, buffer+1, recv_len);
     }
-    free(tx);
-    free(rx);
+    free(buffer);
     return res;
 }
 
