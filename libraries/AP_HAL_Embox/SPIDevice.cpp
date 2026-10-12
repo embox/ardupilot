@@ -76,9 +76,11 @@ bool SPIDevice::transfer(const uint8_t *send, uint32_t send_len,
     if (!buffer) {
         return false;
     }
-    memcpy(buffer, send, send_len);
+    if (send_len > 0) {
+        memcpy(buffer, send, send_len);
+    }
     bool res = transfer_fullduplex(buffer, buffer, len);
-    if (res) {
+    if (res && recv_len > 0) {
         memcpy(recv, buffer+1, recv_len);
     }
     free(buffer);
