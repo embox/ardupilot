@@ -47,7 +47,7 @@ SPIDevice::SPIDevice(SPIBus &bus, struct spi_device *device)
     : bus(bus)
     , dev(device)
 {
-    set_device_bus(bus.bus_id);
+    set_device_bus(device->spid_bus_num);
     device->spid_flags |= SPI_CS_ACTIVE;
     device->spid_flags |= SPI_CS_INACTIVE;
     // TODO
@@ -115,21 +115,16 @@ AP_HAL::OwnPtr<AP_HAL::SPIDevice>
 SPIDeviceManager::get_device(const char *name)
 {
     struct spi_device *dev = spi_dev_by_name(name);
-    /* Find the bus description in the table */
-
-
-    if (!dev) {
-        return AP_HAL::OwnPtr<AP_HAL::SPIDevice>(nullptr);
-    }
-
-
-    auto d = AP_HAL::OwnPtr<AP_HAL::SPIDevice>(NEW_NOTHROW SPIDevice(businfo[dev->spid_bus_num], dev));
-
     if (!dev) {
         return nullptr;
     }
 
+    if (dev->spid_bus_num < 0 ||
+        static_cast<unsigned>(dev->spid_bus_num) >= ARRAY_SIZE(businfo)) {
+        return nullptr;
+    }
 
-    return d;
+    return AP_HAL::OwnPtr<AP_HAL::SPIDevice>(
+        NEW_NOTHROW SPIDevice(businfo[dev->spid_bus_num], dev));
 }
 }
