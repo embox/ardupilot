@@ -1,42 +1,45 @@
 #include "RCOutput.h"
 #include <AP_Math/AP_Math.h>
 #include <cstdint>
+#include <stdio.h>
 
 using namespace Embox;
 
 
-void RCOutput::init() {
+void RCOutput::init()
+{
     n = 0;
     ngroups = 0;
 
     for (int i = 0; i < pwm_dev_num(); i++) {
         struct pwm_device *pwm_dev;
-	    const struct pwm_desc *pwmd_desc;
+        const struct pwm_desc *pwmd_desc;
 
         pwm_dev = pwm_dev_by_idx(i);
-	    pwmd_desc = pwm_dev->pwmd_desc;
+        pwmd_desc = pwm_dev->pwmd_desc;
 
         struct pwm_group &group = groups[ngroups];
         group.dev = pwm_dev;
         group.freq = 50;
         group.mode = MODE_PWM_NORMAL;
 
-	    for (int j = 0; j < pwm_dev_max_chan(pwm_dev); j++) {
-		    if (pwmd_desc->pwmd_avail_chan_mask & (1 << j)) {
+        for (int j = 0; j < pwm_dev_max_chan(pwm_dev); j++) {
+            if (pwmd_desc->pwmd_avail_chan_mask & (1 << j)) {
                 channels[n].value = 0;
                 channels[n].group = &group;
                 channels[n].local_idx = j;
                 n++;
-		    }
+            }
         }
         pwm_set_frequency(pwm_dev, 50);
 
         ngroups++;
-	}
+    }
 }
 
 
-void RCOutput::set_freq(uint32_t chmask, uint16_t freq_hz) {
+void RCOutput::set_freq(uint32_t chmask, uint16_t freq_hz)
+{
     for (uint8_t chan = 0; chan < n; chan++) {
         if ((1U << chan) & chmask) {
             if (channels[chan].group->freq != freq_hz) {
@@ -47,7 +50,8 @@ void RCOutput::set_freq(uint32_t chmask, uint16_t freq_hz) {
     }
 }
 
-uint16_t RCOutput::get_freq(uint8_t chan) {
+uint16_t RCOutput::get_freq(uint8_t chan)
+{
     if (chan < n) {
         return channels[chan].group->freq;
     }
@@ -73,6 +77,12 @@ void RCOutput::write(uint8_t chan, uint16_t period_us)
     if (chan >= n) {
         return;
     }
+
+#ifdef EMBOX_RCOUTPUT_DEBUG
+    if (channels[chan].value != period_us) {
+        printf("chan = %u, period_us = %u\n",(unsigned)chan, (unsigned)period_us);
+    }
+#endif
 
     channels[chan].value = period_us;
     if (_corked) {
