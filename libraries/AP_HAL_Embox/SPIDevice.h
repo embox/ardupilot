@@ -30,7 +30,6 @@ namespace Embox {
 class SPIBus : public DeviceBus {
 public:
     SPIBus():DeviceBus(AP_HAL::Scheduler::PRIORITY_I2C) {};
-    uint32_t bus_id;
 };
 
 class SPIDevice : public AP_HAL::SPIDevice {
