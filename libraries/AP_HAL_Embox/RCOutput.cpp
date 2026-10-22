@@ -61,15 +61,39 @@ uint16_t RCOutput::get_freq(uint8_t chan)
 void RCOutput::enable_ch(uint8_t chan)
 {
     if (chan < n) {
-        pwm_enable(channels[chan].group->dev, channels[chan].local_idx);
+        pwm_enable(channels[chan].group->dev, 1U << channels[chan].local_idx);
     }
 }
 
 void RCOutput::disable_ch(uint8_t chan)
 {
     if (chan < n) {
-        pwm_disable(channels[chan].group->dev, channels[chan].local_idx);
+        pwm_disable(channels[chan].group->dev, 1U << channels[chan].local_idx);
     }
+}
+
+bool RCOutput::force_safety_on(void)
+{
+    _pending_mask = 0;
+    _corked = false;
+
+    bool success = true;
+    for (uint8_t i = 0; i < ngroups; i++) {
+        struct pwm_device *dev = groups[i].dev;
+        if (dev->pwmd_ops == nullptr || dev->pwmd_ops->pwmo_disable == nullptr) {
+            success = false;
+            continue;
+        }
+
+        uint32_t mask = 0;
+        for (uint8_t chan = 0; chan < n; chan++) {
+            if (channels[chan].group == &groups[i]) {
+                mask |= 1U << channels[chan].local_idx;
+            }
+        }
+        pwm_disable(dev, mask);
+    }
+    return success;
 }
 
 void RCOutput::write(uint8_t chan, uint16_t period_us)
