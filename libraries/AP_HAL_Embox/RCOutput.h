@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Util.h"
-#include "AP_HAL_Embox.h"
 #include <cstdint>
 #include <drivers/pwm.h>
 
@@ -30,6 +29,7 @@ namespace Embox {
         uint16_t get_freq(uint8_t ch) override;
         void enable_ch(uint8_t ch) override;
         void disable_ch(uint8_t ch) override;
+        bool force_safety_on(void) override;
         void write(uint8_t ch, uint16_t period_us) override;
         uint16_t read(uint8_t ch) override;
         void read(uint16_t* period_us, uint8_t len) override;
