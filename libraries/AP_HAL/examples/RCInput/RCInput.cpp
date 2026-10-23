@@ -12,6 +12,12 @@
 AP_BoardConfig BoardConfig;
 #endif
 
+#if CONFIG_HAL_BOARD == HAL_BOARD_EMBOX
+#include <AP_SerialManager/AP_SerialManager.h>
+
+static AP_SerialManager serial_manager;
+#endif
+
 void setup();
 void loop();
 
@@ -27,6 +33,11 @@ void setup(void)
     hal.console->printf("Starting RCInput test\n");
 #if HAL_WITH_IO_MCU
     BoardConfig.init();
+#endif
+#if CONFIG_HAL_BOARD == HAL_BOARD_EMBOX
+    // Use SERIAL1 for RC input; the RC protocol decoder selects the UART baud rate.
+    serial_manager.set_protocol_and_baud(1, AP_SerialManager::SerialProtocol_RCIN, 416666);
+    serial_manager.init();
 #endif
 }
 
