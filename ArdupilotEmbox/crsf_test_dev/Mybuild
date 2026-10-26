@@ -1,0 +1,7 @@
+package ext_project.ardupilot
+
+module crsf_test_dev {
+	source "crsf_test_dev.c"
+
+	@NoRuntime depends embox.device.char_dev
+}
