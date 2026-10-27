@@ -15,6 +15,12 @@
 #include <AP_IOMCU/AP_IOMCU.h>
 AP_BoardConfig BoardConfig;
 #endif
+#if CONFIG_HAL_BOARD == HAL_BOARD_EMBOX
+#include <AP_SerialManager/AP_SerialManager.h>
+
+static AP_SerialManager serial_manager;
+#endif
+
 
 void setup();
 void loop();
@@ -33,6 +39,13 @@ void setup(void)
 #if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
     BoardConfig.init();
 #endif
+#if CONFIG_HAL_BOARD == HAL_BOARD_EMBOX
+    // Use SERIAL1 for RC input; the RC protocol decoder selects the UART baud rate.
+    serial_manager.set_protocol_and_baud(1, AP_SerialManager::SerialProtocol_RCIN, 416666);
+    serial_manager.init();
+#endif
+
+    hal.rcout->set_output_mode(0x3FFF, AP_HAL::RCOutput::MODE_PWM_DSHOT600);
     for (uint8_t i = 0; i < MAX_CHANNELS; i++) {
         hal.rcout->enable_ch(i);
     }
