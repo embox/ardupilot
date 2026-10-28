@@ -84,6 +84,10 @@ void DeviceBus::bus_thread(void)
 
 AP_HAL::Device::PeriodicHandle DeviceBus::register_periodic_callback(uint32_t period_usec, AP_HAL::Device::PeriodicCb cb, AP_HAL::Device *_hal_device)
 {
+    if (period_usec == 0) {
+        return nullptr;
+    }
+
     if (!thread_started) {
         thread_started = true;
         // setup a name for the thread
@@ -128,6 +132,17 @@ AP_HAL::Device::PeriodicHandle DeviceBus::register_periodic_callback(uint32_t pe
  */
 bool DeviceBus::adjust_timer(AP_HAL::Device::PeriodicHandle h, uint32_t period_usec)
 {
-    // TODO: add timer adjustment
-    return true;
+    if (h == nullptr || period_usec == 0) {
+        return false;
+    }
+
+    for (callback_info *callback = callbacks; callback != nullptr; callback = callback->next) {
+        if (callback == h) {
+            callback->period_usec = period_usec;
+            callback->next_usec = AP_HAL::micros64() + period_usec;
+            return true;
+        }
+    }
+
+    return false;
 }
