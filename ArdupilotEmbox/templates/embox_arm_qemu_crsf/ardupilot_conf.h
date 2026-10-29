@@ -3,6 +3,17 @@
 #define EMBOX_INS_STUB
 #define EMBOX_RCOUTPUT_DEBUG
 
+/*===============> AHRS <=============== */
+#undef AP_AHRS_ENABLED
+#define AP_AHRS_ENABLED 1
+
+#undef AP_AHRS_BACKEND_DEFAULT_ENABLED
+#define AP_AHRS_BACKEND_DEFAULT_ENABLED 0
+
+#undef AP_AHRS_DCM_ENABLED
+#define AP_AHRS_DCM_ENABLED 1
+
+/*============> RC_PROTOCOL <=========== */
 #undef AP_RCPROTOCOL_ENABLED
 #define AP_RCPROTOCOL_ENABLED 1
 
@@ -15,5 +26,6 @@
 #undef AP_RCPROTOCOL_CRSF_ENABLED
 #define AP_RCPROTOCOL_CRSF_ENABLED 1
 
+/*=============> RC_TELEM <============ */
 #undef HAL_CRSF_TELEM_ENABLED
 #define HAL_CRSF_TELEM_ENABLED 1
