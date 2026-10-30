@@ -1,20 +1,13 @@
-"pin GPIOF 10 set",
-"pin GPIOF 11 set",
-"pin GPIOF 12 set",
+//"pin GPIOC 12 set",
+//"pin GPIOC 13 set",
+//"pin GPIOC 14 set",
+//"pin GPIOC 15 set",
 
-//"export PWD=/mnt",
+//"export PWD=/",
 //"export HOME=/",
 
-//"mkdir -s /mnt",
-//"mount -t vfat /dev/mmc0 /mnt",
-//"cd /mnt",
-
 //"netmanager",
-//"arducopter --serial0=udp:192.168.2.1:14550",
 
-"arducopter --serial0=/dev/ttyS0 --defaults /copter.parm",
-
-/* 'serial1' is used for RC via CRSF protocol */
-//"arducopter --serial0=/dev/ttyACM0 --serial1=/dev/ttyS2",
+"arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS2 --defaults /copter.parm",
 
 //"tish",
