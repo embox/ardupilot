@@ -534,6 +534,10 @@ void AP_Baro::init(void)
         sensors[i].bus_id.set(0);
     }
 
+#if CONFIG_HAL_BOARD == HAL_BOARD_EMBOX && AP_BARO_DUMMY_ENABLED
+	ADD_BACKEND(NEW_NOTHROW AP_Baro_Dummy(*this));
+#endif
+
 #if AP_SIM_BARO_ENABLED
     SITL::SIM *sitl = AP::sitl();
     if (sitl == nullptr) {
