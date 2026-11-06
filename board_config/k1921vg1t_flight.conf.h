@@ -4,15 +4,15 @@
 
 #define HSECLK_VAL    27000000UL
 
-#define SYSTEM_FREQ  150000000UL
-#define PLL0_DIV_NDIV      (100)
-#define PLL0_DIV_PREDIV    (1)
-#define PLL0_DIV_RDIV      (2)
-#define PLL0_DIV_DIV1A     (1)
-#define PLL0_DIV_DIV1B     (2)
-#define PLL0_FRAC          (1)
-#define PLL0_MOD           (1)
-#define FLASH_LATENCY      (2)
+// #define SYSTEM_FREQ  150000000UL
+// #define PLL0_DIV_NDIV      (100)
+// #define PLL0_DIV_PREDIV    (1)
+// #define PLL0_DIV_RDIV      (2)
+// #define PLL0_DIV_DIV1A     (1)
+// #define PLL0_DIV_DIV1B     (2)
+// #define PLL0_FRAC          (1)
+// #define PLL0_MOD           (1)
+// #define FLASH_LATENCY      (2)
 
 // #define SYSTEM_FREQ  180000000UL
 // #define PLL0_DIV_NDIV      (40)
@@ -24,15 +24,15 @@
 // #define PLL0_MOD           (1)
 // #define FLASH_LATENCY      (5)
 
-// #define SYSTEM_FREQ  202500000UL
-// #define PLL0_DIV_NDIV      (75)
-// #define PLL0_DIV_PREDIV    (1)
-// #define PLL0_DIV_RDIV      (1)
-// #define PLL0_DIV_DIV1A     (4)
-// #define PLL0_DIV_DIV1B     (0)
-// #define PLL0_FRAC          (1)
-// #define PLL0_MOD           (1)
-// #define FLASH_LATENCY      (5)
+#define SYSTEM_FREQ  202500000UL
+#define PLL0_DIV_NDIV      (75)
+#define PLL0_DIV_PREDIV    (1)
+#define PLL0_DIV_RDIV      (1)
+#define PLL0_DIV_DIV1A     (4)
+#define PLL0_DIV_DIV1B     (0)
+#define PLL0_FRAC          (1)
+#define PLL0_MOD           (1)
+#define FLASH_LATENCY      (5)
 
 //FOUT = 60 000 000 Hz  from 27 MHz HSE
 #define PLL1_DIV_NDIV      (100)
