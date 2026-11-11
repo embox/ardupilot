@@ -1,7 +1,7 @@
-//"pin GPIOC 12 set",
-//"pin GPIOC 13 set",
-//"pin GPIOC 14 set",
-//"pin GPIOC 15 set",
+"pin GPIOC 12 reset",
+//"pin GPIOC 13 reset",
+//"pin GPIOC 14 reset",
+//"pin GPIOC 15 reset",
 
 //"export PWD=/",
 //"export HOME=/",

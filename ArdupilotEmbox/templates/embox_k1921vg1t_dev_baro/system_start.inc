@@ -1,19 +1,13 @@
-"pin GPIOF 10 set",
-"pin GPIOF 11 set",
-"pin GPIOF 12 set",
+"pin GPIOC 12 reset",
+//"pin GPIOC 13 reset",
+//"pin GPIOC 14 reset",
+//"pin GPIOC 15 reset",
 
-//"export PWD=/mnt",
+//"export PWD=/",
 //"export HOME=/",
 
-//"mkdir -s /mnt",
-//"mount -t vfat /dev/mmc0 /mnt",
-//"cd /mnt",
-
 //"netmanager",
-//"arducopter --serial0=udp:192.168.2.1:14550",
 
-//"arducopter --serial0=/dev/ttyS1",
-//"arducopter --serial0=/dev/ttyACM0",
-"arducopter",
+"arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS2 --defaults /copter.parm",
 
-"tish",
+//"tish",
