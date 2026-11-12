@@ -1808,11 +1808,6 @@ class embox(Board):
 
         env.CXXFLAGS += ['-DHAL_WITH_EKF_DOUBLE=0']
 
-        if not cfg.env.DEBUG:
-            env.CXXFLAGS += [
-                '-Os',
-            ]
-
         cfg.check_librt(env)
         cfg.check_lttng(env)
         cfg.check_libdl(env)
