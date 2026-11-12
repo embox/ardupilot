@@ -6,7 +6,7 @@ package ext_project.ardupilot
 @BuildDepends(embox.cxx.LibCxx)
 @Build(stage=2, script="$(EXTERNAL_MAKE) configure build install")
 module arducopter {
-	option boolean debug=true
+	option boolean logging=false
 	option boolean scripting=false
 	option boolean networking=false
 	option boolean linker_map=false

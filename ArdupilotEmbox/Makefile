@@ -4,9 +4,7 @@ ap_board      := $(call option_get,STRING,board)
 ap_example    := $(call option_get,STRING,example)
 ap_linker_map := $(call option_get,BOOLEAN,linker_map)
 
-ifeq (1,$(call option_get,BOOLEAN,debug))
-ap_flags += --debug
-else
+ifeq (0,$(call option_get,BOOLEAN,logging))
 ap_flags += --disable-Logging
 endif
 
