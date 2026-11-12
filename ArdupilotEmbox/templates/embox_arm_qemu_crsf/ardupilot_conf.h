@@ -1,7 +1,7 @@
 
 // #define HAL_BARO_ALLOW_INIT_NO_BARO
+// #define EMBOX_RCOUTPUT_DEBUG
 #define EMBOX_INS_STUB
-#define EMBOX_RCOUTPUT_DEBUG
 
 /*===============> BARO <=============== */
 #undef AP_BARO_ENABLED
