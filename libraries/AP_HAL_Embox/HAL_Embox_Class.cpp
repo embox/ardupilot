@@ -7,6 +7,7 @@
 #include <AP_HAL/utility/getopt_cpp.h>
 #include <AP_HAL_Empty/AP_HAL_Empty.h>
 #include <AP_HAL_Empty/AP_HAL_Empty_Private.h>
+#include <AP_HAL/SIMState.h>
 
 #include "GPIO.h"
 #include "I2CDevice.h"
@@ -60,6 +61,10 @@ static RCOutput rcoutDriver;
 
 static Scheduler schedulerInstance;
 
+#if AP_SIM_ENABLED
+static AP_HAL::SIMState xsimState;
+#endif
+
 static Empty::OpticalFlow opticalFlowDriver;
 #if HAL_WITH_DSP
 static Empty::DSP dspDriver;
@@ -91,6 +96,9 @@ HAL_Embox::HAL_Embox() : AP_HAL::HAL(
                              &utilInstance,
                              &opticalFlowDriver,
                              &flashDriver,
+#if AP_SIM_ENABLED
+                             &xsimState,
+#endif
 #if HAL_WITH_DSP
                              &dspDriver,
 #endif
