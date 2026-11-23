@@ -1,9 +1,10 @@
 
 /*===============> Inertial <=============== */
 // #define EMBOX_INS_STUB
-#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(BMI160, "BMI160")
+// #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(BMI160, "BMI160")
 // #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensensev3, "ICM42688P", ROTATION_YAW_90);
 // #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6000", ROTATION_YAW_90);
+#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6500", ROTATION_YAW_90);
 
 /*===============> BARO <=============== */
 // #define HAL_BARO_ALLOW_INIT_NO_BARO

@@ -8,6 +8,7 @@
 //"netmanager",
 
 //"arducopter --serial0=udp:192.168.2.1:14550 --serial1=/dev/ttyS1 --defaults /copter.parm",
-"arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS1 --defaults /copter.parm",
+//"arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS1 --defaults /copter.parm",
+"arducopter",
 
 //"tish",
