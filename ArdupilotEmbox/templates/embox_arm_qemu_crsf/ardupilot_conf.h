@@ -3,6 +3,10 @@
 // #define EMBOX_RCOUTPUT_DEBUG
 #define EMBOX_INS_STUB
 
+/*===============> MATH <=============== */
+// #undef HAL_WITH_EKF_DOUBLE
+// #define HAL_WITH_EKF_DOUBLE 1
+
 /*===============> BARO <=============== */
 #undef AP_BARO_ENABLED
 #define AP_BARO_ENABLED 1
