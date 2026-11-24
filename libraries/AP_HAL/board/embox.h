@@ -24,12 +24,6 @@
 #define HAL_BOARD_TERRAIN_DIRECTORY "terrain"
 #define HAL_BOARD_STORAGE_DIRECTORY "."
 
-#ifdef __cplusplus
-#include <AP_HAL_Embox/Semaphores.h>
-#define HAL_Semaphore Embox::Semaphore
-#define HAL_BinarySemaphore Embox::BinarySemaphore
-#endif
-
 #define HAL_LOGGING_FILESYSTEM_ENABLED 0
 #define AP_FILESYSTEM_POSIX_HAVE_FSYNC 0
 #define AP_FILESYSTEM_POSIX_HAVE_STATFS 0
@@ -181,6 +175,12 @@
 #define PROBE_IMU_SPI(driver, devname, args ...) ADD_BACKEND(AP_InertialSensor_ ## driver::probe(*this,hal.spi->get_device(devname),##args))
 
 #include <ardupilot_conf.h>
+
+#ifdef __cplusplus
+#include <AP_HAL_Embox/Semaphores.h>
+#define HAL_Semaphore Embox::Semaphore
+#define HAL_BinarySemaphore Embox::BinarySemaphore
+#endif
 
 // #define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6000", ROTATION_YAW_90);
 
