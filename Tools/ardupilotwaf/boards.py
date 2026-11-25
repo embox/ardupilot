@@ -1854,3 +1854,13 @@ class embox(Board):
     def get_name(self):
         # get name of class
         return self.__class__.__name__
+
+class embox_sim(embox):
+    def configure_env(self, cfg, env):
+        super(embox_sim, self).configure_env(cfg, env)
+        env.DEFINES.update(
+            AP_SIM_ENABLED = 1,
+        )
+        env.AP_LIBRARIES += [
+            'SITL',
+        ]
