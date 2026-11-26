@@ -262,6 +262,11 @@ ftype wrap_2PI(const ftype radian)
     }
     return res;
 }
+volatile float __my_global_tmp;
+void my_math_error_check(float amt) {
+	__my_global_tmp = amt;
+}
+
 
 template <typename T>
 T constrain_value_line(const T amt, const T low, const T high, uint32_t line)
@@ -273,6 +278,7 @@ T constrain_value_line(const T amt, const T low, const T high, uint32_t line)
 #if AP_INTERNALERROR_ENABLED
         AP::internalerror().error(AP_InternalError::error_t::constraining_nan, line);
 #endif
+	my_math_error_check((float)amt);
         return (low + high) / 2;
     }
 

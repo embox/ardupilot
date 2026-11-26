@@ -164,6 +164,8 @@ ftype wrap_PI(const ftype radian);
  */
 ftype wrap_2PI(const ftype radian);
 
+void my_math_error_check(float amt) ;
+
 /*
  * Constrain a value to be within the range: low and high
  */
