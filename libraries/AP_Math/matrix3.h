@@ -282,6 +282,8 @@ public:
     Matrix3<float> tofloat(void) const {
         return Matrix3<float>(a.tofloat(), b.tofloat(), c.tofloat());
     }
+
+    bool check_has_nan(void) const;
 };
 
 typedef Matrix3<int16_t>                Matrix3i;

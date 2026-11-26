@@ -825,6 +825,14 @@ T QuaternionT<T>::roll_pitch_difference(const QuaternionT<T> &v) const
     return (2.0 * asinF(vec_len_div2));
 }
 
+template <typename T>
+bool QuaternionT<T>::check_has_nan(void) const {
+    if ( isnan(q1) || isnan(q1) || isnan(q1) || isnan(q1) ) {
+        return true;
+    }
+    return false;
+}
+
 // define for float and double
 template class QuaternionT<float>;
 template class QuaternionT<double>;

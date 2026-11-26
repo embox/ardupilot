@@ -198,6 +198,8 @@ public:
     QuaternionT<float> tofloat(void) const {
         return QuaternionT<float>(q1,q2,q3,q4);
     }
+
+    bool check_has_nan(void) const;
 };
 
 typedef QuaternionT<float> Quaternion;

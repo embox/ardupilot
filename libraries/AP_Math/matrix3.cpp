@@ -251,6 +251,19 @@ void Matrix3<T>::from_axis_angle(const Vector3<T> &v, T theta)
     c.z = t*z*z + C;
 }
 
+template <typename T>
+bool Matrix3<T>::check_has_nan(void) const {
+    if (isnan(a.x) || isnan(a.y) || isnan(a.z) ) {
+        return true;
+    }
+    if (isnan(b.x) || isnan(b.y) || isnan(b.z) ) {
+        return true;
+    }
+    if (isnan(c.x) || isnan(c.y) || isnan(c.z) ) {
+        return true;
+    }
+    return false;
+}
 
 // define for float and double
 template class Matrix3<float>;
