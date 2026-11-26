@@ -1,0 +1,45 @@
+
+// #define HAL_BARO_ALLOW_INIT_NO_BARO
+// #define EMBOX_RCOUTPUT_DEBUG
+#define EMBOX_INS_STUB
+
+/*===============> MATH <=============== */
+// #undef HAL_WITH_EKF_DOUBLE
+// #define HAL_WITH_EKF_DOUBLE 1
+
+/*===============> BARO <=============== */
+#undef AP_BARO_ENABLED
+#define AP_BARO_ENABLED 1
+
+#undef AP_BARO_BACKEND_DEFAULT_ENABLED
+#define AP_BARO_BACKEND_DEFAULT_ENABLED 0
+
+#undef AP_BARO_DUMMY_ENABLED
+#define AP_BARO_DUMMY_ENABLED 1
+
+/*===============> AHRS <=============== */
+#undef AP_AHRS_ENABLED
+#define AP_AHRS_ENABLED 1
+
+// #undef AP_AHRS_BACKEND_DEFAULT_ENABLED
+// #define AP_AHRS_BACKEND_DEFAULT_ENABLED 0
+
+// #undef AP_AHRS_DCM_ENABLED
+// #define AP_AHRS_DCM_ENABLED 1
+
+/*============> RC_PROTOCOL <=========== */
+#undef AP_RCPROTOCOL_ENABLED
+#define AP_RCPROTOCOL_ENABLED 0
+
+#undef AP_RCPROTOCOL_BACKEND_DEFAULT_ENABLED
+#define AP_RCPROTOCOL_BACKEND_DEFAULT_ENABLED 0
+
+// #undef AP_RCPROTOCOL_UDP_ENABLED
+// #define AP_RCPROTOCOL_UDP_ENABLED 1
+
+#undef AP_RCPROTOCOL_CRSF_ENABLED
+#define AP_RCPROTOCOL_CRSF_ENABLED 0
+
+/*=============> RC_TELEM <============ */
+#undef HAL_CRSF_TELEM_ENABLED
+#define HAL_CRSF_TELEM_ENABLED 0

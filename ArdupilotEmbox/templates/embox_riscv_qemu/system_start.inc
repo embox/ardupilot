@@ -1,12 +1,7 @@
-"export PWD=/mnt",
-"export HOME=/",
+// "export PWD=/",
+// "export HOME=/",
 
-//"netmanager",
+ "arducopter --serial0=/dev/ttyS0 --defaults /copter.parm",
+// "arducopter --serial0=/dev/ttyS0 --serial1=/dev/ttyS1 --defaults /copter.parm",
 
-//"mkdir -s /mnt",
-//"mount -t vfat /dev/mmc0 /mnt",
-//"cd /mnt",
-
-"arducopter --serial0=/dev/ttyS1",
-
-"tish",
+// "tish",
