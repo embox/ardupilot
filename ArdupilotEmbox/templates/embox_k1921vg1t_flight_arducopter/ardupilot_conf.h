@@ -1,4 +1,21 @@
 
+/*===============> LEDs <=============== */
+#undef  AP_NOTIFY_GPIO_LED_3_ENABLED
+#define AP_NOTIFY_GPIO_LED_3_ENABLED 1
+
+/* GPIOF(GPIO5).10 */
+#undef  HAL_GPIO_A_LED_PIN
+#define HAL_GPIO_A_LED_PIN     (90)
+/* GPIOF(GPIO5).11 */
+#undef  HAL_GPIO_B_LED_PIN
+#define HAL_GPIO_B_LED_PIN     (91)
+/* GPIOF(GPIO5).12 */
+#undef  HAL_GPIO_C_LED_PIN
+#define HAL_GPIO_C_LED_PIN     (92)
+
+#undef HAL_GPIO_LED_ON
+#define HAL_GPIO_LED_ON      1
+
 /*===============> Inertial <=============== */
 //#define EMBOX_INS_STUB
 //#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(BMI160, "BMI160")
@@ -33,7 +50,7 @@
 // #define AP_AHRS_DCM_ENABLED 1
 
 /*============> RC_PROTOCOL <=========== */
-#define EMBOX_RCOUTPUT_DEBUG
+// #define EMBOX_RCOUTPUT_DEBUG
 
 #undef AP_RCPROTOCOL_ENABLED
 #define AP_RCPROTOCOL_ENABLED 1

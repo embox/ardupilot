@@ -1,11 +1,40 @@
 
+
+/*===============> LEDs <=============== */
+#undef  AP_NOTIFY_GPIO_LED_3_ENABLED
+#define AP_NOTIFY_GPIO_LED_3_ENABLED 1
+
+/* GPIOC(GPIO2).13 */
+#undef  HAL_GPIO_A_LED_PIN
+#define HAL_GPIO_A_LED_PIN     (45)
+/* GPIOC(GPIO2).14 */
+#undef  HAL_GPIO_B_LED_PIN
+#define HAL_GPIO_B_LED_PIN     (46)
+/* GPIOC(GPIO3).15 */
+#undef  HAL_GPIO_C_LED_PIN
+#define HAL_GPIO_C_LED_PIN     (47)
+
+#undef HAL_GPIO_LED_ON
+#define HAL_GPIO_LED_ON      0
+
+/*===============> Inertial <=============== */
 #define EMBOX_INS_STUB
-#define EMBOX_RCOUTPUT_DEBUG
+//#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(BMI160, "BMI160")
+//#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensensev3, "ICM42688P", ROTATION_YAW_90);
+//#define HAL_INS_PROBE_LIST PROBE_IMU_SPI(Invensense, "mpu6000", ROTATION_YAW_90);
 
 /*===============> BARO <=============== */
+/*===============> BARO <=============== */
 // #define HAL_BARO_ALLOW_INIT_NO_BARO
-#undef AP_BARO_ENABLED
+
 #define AP_BARO_ENABLED 1
+
+//#define AP_BARO_BMP280_ENABLED 1
+// #undef AP_BARO_SPL06_ENABLED
+// #define AP_BARO_SPL06_ENABLED 1
+// #define AP_BARO_PROBE_EXT_PARAMETER_ENABLED 1
+// BIT MASK 0:BMP085,1:BMP280,2:MS5611,3:MS5607,4:MS5637,5:FBM320,6:DPS280,7:LPS25H,8:Keller,9:MS5837,10:BMP388,11:SPL06,12:MSP,13:BMP581
+// #define HAL_BARO_PROBE_EXT_DEFAULT 0x802
 
 #undef AP_BARO_BACKEND_DEFAULT_ENABLED
 #define AP_BARO_BACKEND_DEFAULT_ENABLED 0
@@ -24,6 +53,8 @@
 // #define AP_AHRS_DCM_ENABLED 1
 
 /*============> RC_PROTOCOL <=========== */
+#define EMBOX_RCOUTPUT_DEBUG
+
 #undef AP_RCPROTOCOL_ENABLED
 #define AP_RCPROTOCOL_ENABLED 1
 
